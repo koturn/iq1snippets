@@ -1,0 +1,998 @@
+include c.snip
+
+delete main
+delete p
+delete try
+
+snippet main
+  int
+  main(${1:int argc, const char* argv[]})
+  {
+    ${0};
+    return EXIT_SUCCESS;
+  }
+
+snippet cout
+  std::cout << ${0} << std::endl;
+
+snippet cout2
+  std::cout << ${0} << '\n';
+
+snippet cout_all
+  std::copy(std::cbegin(${1}), std::cend($1), std::ostream_iterator<const decltype($1)::value_type&>(std::cout, ${2:" "}));
+
+snippet put
+  std::cout.put(${0})
+
+snippet cerr
+  std::cerr << ${0} << std::endl;
+
+snippet clog
+  std::clog << ${0} << std::endl;
+
+snippet cin
+  std::cin >> ${0};
+
+snippet endl
+  std::cout << std::endl;
+
+snippet flush
+  std::cout << std::flush;
+
+snippet precision
+  std::fixed << std::setprecision(${1}) << ${0}
+
+snippet setfill
+  std::setw(${1:#:n}) << std::setfill(${2:'0'}) << ${0}
+
+snippet fstream
+  std::${1:fstream} ${2:fs}(${3:#:filename}${4:, std::ios::binary});
+  if (!$2.is_open()) {
+    ${5:std\:\:cerr << "Failed to open\: " << $3 << std\:\:endl;}
+  }
+  ${0}
+
+snippet read_all
+  std::string ${1:text}((std::istreambuf_iterator<char>(${2:#:stream})), std::istreambuf_iterator<char>())
+
+snippet sleep
+  std::this_thread::sleep_for(std::chrono::${1:milliseconds}(${2:1000}));
+
+snippet constructor
+alias ctor
+  ${1:#:ClassName}() noexcept${0}
+
+snippet copy_constructor
+alias copy_ctor
+  ${1:#:ClassName}(const $1& ${2:that})${0}
+
+snippet move_constructor
+alias move_ctor
+  ${1:#:ClassName}($1&& ${2:that}) noexcept${0}
+
+snippet destructor
+alias dtor
+  ~something() noexcept${0}
+
+snippet op_assign
+  ${1:#:ClassName}& operator=(const $1&)${0};
+
+snippet op_move_assign
+  ${1:#:ClassName}& operator=($1&&) noexcept${0};
+
+snippet numeric_limits
+  std::numeric_limits<${1:int}>::${0}()
+
+# decl
+snippet string
+abbr std::string <string>
+  std::string ${0}
+
+snippet complex
+abbr std::complex<T> <complex>
+  std::complex<${1:double}> ${0}
+
+snippet array
+abbr std::array<T, N> <array>
+  std::array<${1:int}, ${2:#:N}> ${0}
+
+snippet vector
+abbr std::vector<T> <vector>
+  std::vector<${1:int}> ${0}
+
+snippet valarray
+abbr std::valarray<T> <valarray>
+  std::valarray<${1:int}> ${0}
+
+snippet bitset
+abbr std::bitset<N> <bitset>
+  std::bitset<${1:8}> ${0}
+
+snippet list
+abbr std::list<T> <list>
+  std::list<${1:int}> ${0}
+
+snippet forward_list
+abbr std::forward_list<T> <forward_list>
+  std::forward_list<${1:int}> ${0}
+
+snippet deque
+abbr std::deque<T> <deque>
+  std::deque<${1:int}> ${0}
+
+snippet stack
+abbr std::stack<T> <stack>
+  std::stack<${1:int}> ${0}
+
+snippet queue
+abbr std::queue<T> <queue>
+  std::queue<${1:int}> ${0}
+
+snippet priority_queue
+abbr std::priority_queue<T> <queue>
+  std::priority_queue<${1:int}> ${0}
+
+snippet priority_queue2
+abbr std::priority_queue<T> <queue>
+  std::priority_queue<${1:int}, std::vector<$1>, std::function<bool (const $1& x, const $1& y)> > ${2}(
+    [](const $1& x, const $1& y) {
+      return ${0:#:x > y};
+    });
+
+snippet map
+abbr std::map<K, V> <map>
+  std::map<${1:int}, ${2:int}> ${0}
+
+snippet unordered_map
+abbr std::unordered_map<K, V> <unordered_map>
+  std::unordered_map<${1:int}, ${2:int}> ${0}
+
+snippet multimap
+abbr std::multimap<K, V> <map>
+  std::multimap<${1:int}, ${2:int}> ${0}
+
+snippet unordered_multimap
+abbr std::unordered_multimap<K, V> <unordered_map>
+  std::unordered_multimap<${1:int}, ${2:int}> ${0}
+
+snippet set
+abbr std::set<T> <set>
+  std::set<${1:int}> ${0}
+
+snippet unordered_set
+abbr std::unordered_set<T> <unordered_set>
+  std::unordered_set<${1:int}> ${0}
+
+snippet multiset
+abbr std::multiset<T> <set>
+  std::multiset<${1:int}> ${0}
+
+snippet unordered_multiset
+abbr std::unordered_multiset<T> <unordered_set>
+  std::unordered_multiset<${1:int}> ${0}
+
+snippet pair
+abbr std::pair<T1, T2> <utility>
+  std::pair<${1:int}, ${2:int}> ${0}
+
+snippet initializer_list
+abbr std::initializer_list<T> <initializer_list>
+  std::initializer_list<${1:int}> ${0}
+
+snippet array2d
+abbr std::array<std::array<T, W>, H> <array>
+  std::array<std::array<${1:int}, ${3:#:W}>, ${2:#:H}> ${0}
+
+snippet vector2d
+abbr std::vector<std::vector<T> > <vector>
+  std::vector<std::vector<${1:int}> > ${2:#:varname}(${3:#:height}, std::vector<$1>(${4:#:width}))
+
+snippet valarray2d
+abbr std::vector<std::valarray<T> > <valarray>
+  std::vector<std::valarray<${1:int}> > ${2:#:varname}(${3:#:height}, std::valarray<$1>(${4:#:width}))
+
+snippet unique_ptr
+abbr std::unique_ptr<T> <memory>
+  auto ${2} = std::make_unique<${1}>(${0});
+
+snippet shared_ptr
+abbr std::shared_ptr<T> <memory>
+  auto ${2} = std::make_shared<${1}>(${0});
+
+snippet random
+  std::${1:mt19937} ${2:rnd}(std::random_device{}())
+
+snippet thread
+  std::thread ${1:#:name}([${2:&}]{
+    ${0}
+  });
+
+snippet async
+  auto ${1:#:name} = std::async(std::launch::${2:async}, [${3:&}]{
+    ${0}
+  });
+
+# type_traits
+snippet is_void
+  std::is_void<${1}>::value
+
+snippet is_null_pointer
+  std::is_null_pointer<${1}>::value
+
+snippet is_integral
+  std::is_integral<${1}>::value
+
+snippet is_floating_point
+  std::is_floating_point<${1}>::value
+
+snippet is_array
+  std::is_array<${1}>::value
+
+snippet is_pointer
+  std::is_pointer<${1}>::value
+
+snippet is_lvalue_reference
+  std::is_lvalue_reference<${1}>::value
+
+snippet is_rvalue_reference
+  std::is_rvalue_reference<${1}>::value
+
+snippet is_member_object_pointer
+  std::is_member_object_pointer<${1}>::value
+
+snippet is_member_function_pointer
+  std::is_member_function_pointer<${1}>::value
+
+snippet is_enum
+  std::is_enum<${1}>::value
+
+snippet is_union
+  std::is_union<${1}>::value
+
+snippet is_class
+  std::is_class<${1}>::value
+
+snippet is_function
+  std::is_function<${1}>::value
+
+snippet is_reference
+  std::is_reference<${1}>::value
+
+snippet is_arithmetic
+  std::is_arithmetic<${1}>::value
+
+snippet is_fundamental
+  std::is_fundamental<${1}>::value
+
+snippet is_object
+  std::is_object<${1}>::value
+
+snippet is_scalar
+  std::is_scalar<${1}>::value
+
+snippet is_compound
+  std::is_compound<${1}>::value
+
+snippet is_member_pointer
+  std::is_member_pointer<${1}>::value
+
+snippet is_const
+  std::is_const<${1}>::value
+
+snippet is_volatile
+  std::is_volatile<${1}>::value
+
+snippet is_trivial
+  std::is_trivial<${1}>::value
+
+snippet is_trivially_copyable
+  std::is_trivially_copyable<${1}>::value
+
+snippet is_standard_layout
+  std::is_standard_layout<${1}>::value
+
+snippet is_pod
+  std::is_pod<${1}>::value
+
+snippet is_literal_type
+  std::is_literal_type<${1}>::value
+
+snippet is_empty
+  std::is_empty<${1}>::value
+
+snippet is_polymorphic
+  std::is_polymorphic<${1}>::value
+
+snippet is_abstract
+  std::is_abstract<${1}>::value
+
+snippet is_final
+  std::is_final<${1}>::value
+
+snippet is_signed
+  std::is_signed<${1}>::value
+
+snippet is_unsigned
+  std::is_unsigned<${1}>::value
+
+snippet is_constructible
+  std::is_constructible<${1}>::value
+
+snippet is_default_constructible
+  std::is_default_constructible<${1}>::value
+
+snippet is_copy_constructible
+  std::is_copy_constructible<${1}>::value
+
+snippet is_move_constructible
+  std::is_move_constructible<${1}>::value
+
+snippet is_assignable
+  std::is_assignable<${1}>::value
+
+snippet is_copy_assignable
+  std::is_copy_assignable<${1}>::value
+
+snippet is_move_assignable
+  std::is_move_assignable<${1}>::value
+
+snippet is_destructible
+  std::is_destructible<${1}>::value
+
+snippet is_trivially_constructible
+  std::is_trivially_constructible<${1}>::value
+
+snippet is_trivially_default_constructible
+  std::is_trivially_default_constructible<${1}>::value
+
+snippet is_trivially_copy_constructible
+  std::is_trivially_copy_constructible<${1}>::value
+
+snippet is_trivially_move_constructible
+  std::is_trivially_move_constructible<${1}>::value
+
+snippet is_trivially_assignable
+  std::is_trivially_assignable<${1}>::value
+
+snippet is_trivially_copy_assignable
+  std::is_trivially_copy_assignable<${1}>::value
+
+snippet is_trivially_move_assignable
+  std::is_trivially_move_assignable<${1}>::value
+
+snippet is_trivially_destructible
+  std::is_trivially_destructible<${1}>::value
+
+snippet is_nothrow_constructible
+  std::is_nothrow_constructible<${1}>::value
+
+snippet is_nothrow_default_constructible
+  std::is_nothrow_default_constructible<${1}>::value
+
+snippet is_nothrow_copy_constructible
+  std::is_nothrow_copy_constructible<${1}>::value
+
+snippet is_nothrow_move_constructible
+  std::is_nothrow_move_constructible<${1}>::value
+
+snippet is_nothrow_assignable
+  std::is_nothrow_assignable<${1}>::value
+
+snippet is_nothrow_copy_assignable
+  std::is_nothrow_copy_assignable<${1}>::value
+
+snippet is_nothrow_move_assignable
+  std::is_nothrow_move_assignable<${1}>::value
+
+snippet is_nothrow_destructible
+  std::is_nothrow_destructible<${1}>::value
+
+snippet has_virtual_destructor
+  std::has_virtual_destructor<${1}>::value
+
+snippet is_same
+  std::is_same<${1}>::value
+
+snippet is_base_of
+  std::is_base_of<${1}>::value
+
+snippet is_convertible
+  std::is_convertible<${1}>::value
+
+snippet remove_const
+  std::remove_const_t<${1}>
+
+snippet remove_volatile
+  std::remove_volatile_t<${1}>
+
+snippet remove_cv
+  std::remove_cv_t<${1}>
+
+snippet add_const
+  std::add_const_t<${1}>
+
+snippet add_volatile
+  std::add_volatile_t<${1}>
+
+snippet add_cv
+  std::add_cv_t<${1}>
+
+snippet remove_reference
+  std::remove_reference_t<${1}>
+
+snippet add_lvalue_reference
+  std::add_lvalue_reference_t<${1}>
+
+snippet add_rvalue_reference
+  std::add_rvalue_reference_t<${1}>
+
+snippet make_signed
+  std::make_signed_t<${1}>
+
+snippet make_unsigned
+  std::make_unsigned_t<${1}>
+
+snippet remove_extent
+  std::remove_extent_t<${1}>
+
+snippet remove_all_extents
+  std::remove_all_extents_t<${1}>
+
+snippet add_pointer
+  std::add_pointer_t<${1}>
+
+snippet remove_pointer
+  std::remove_pointer_t<${1}>
+
+snippet aligned_storage
+  std::aligned_storage_t<${1}>
+
+snippet aligned_union
+  std::aligned_union_t<${1}>
+
+snippet decay
+  std::decay_t<${1}>
+
+snippet enable_if
+  typename std::enable_if_t<${0}, std::nullptr_t> = nullptr
+
+snippet conditional
+  std::conditional_t<${1}>
+
+snippet common_type
+  std::common_type_t<${1}>
+
+snippet underlying_type
+  std::underlying_type_t<${1}>
+
+snippet result_of
+  std::result_of_t<${1}>
+
+snippet fn
+  ${1:#:rettype}
+  ${2:#:fucname}()${3: noexcept}
+  {
+    ${0}
+  }
+
+snippet fn_auto
+  auto
+  ${2:#:fucname}()${3: noexcept} -> ${1:#:rettype}
+  {
+    ${0}
+  }
+
+snippet foreach_iterator
+  for (auto ${1:itr} = std::begin(${2}); $1 != std::end($2); ++$1) {
+    ${0}
+  }
+
+snippet foreach_const_iterator
+  for (auto ${1:itr} = std::cbegin(${2}); $1 != std::cend($2); ++$1) {
+    ${0}
+  }
+
+snippet foreach_typeof
+abbr foreach_typeof (GNU only)
+  for (typeof(std::begin(${1})) ${2:itr} = std::begin($1); $2 != std::end($1); ++$2) {
+    ${0}
+  }
+
+snippet range_based_for
+alias rbf
+  for (auto&& ${1:e} : ${2:#:container}) {
+    ${0}
+  }
+
+snippet range_based_for_const
+alias rbfc
+  for (const auto& ${1:e} : ${2:#:container}) {
+    ${0}
+  }
+
+snippet try
+  try {
+    ${0}
+  } catch (${1:const std::exception&} ${2:e}) {
+    ${3:std::cerr << $2.what() << std::endl;}
+  }
+
+
+# <algorithm>
+snippet for_each
+abbr std::for_each <algorithm>
+  std::for_each(
+    std::begin(${1}),
+    std::end($1),
+    [](const auto& ${2:e}) {
+      ${0}
+    });
+
+snippet all_of
+abbr std::all_of <algorithm>
+  std::all_of(
+    std::cbegin(${1}),
+    std::cend($1),
+    [](const auto& ${2:e}) {
+      return ${0};
+    });
+
+snippet none_of
+abbr std::none_of <algorithm>
+  std::none_of(
+    std::cbegin(${1}),
+    std::cend($1),
+    [](const auto& ${2:e}) {
+      return ${0};
+    });
+
+snippet any_of
+abbr std::any_of <algorithm>
+  std::any_of(
+    std::cbegin(${1}),
+    std::cend($1),
+    [](const auto& ${2:e}) {
+      return ${0};
+    });
+
+snippet sort
+abbr std::sort <algorithm>
+  std::sort(std::begin(${1}), std::end($1))
+
+snippet sort_f
+abbr std::sort <algorithm>
+  std::sort(
+    std::begin(${1}),
+    std::end($1),
+    [](const auto& x, const auto& y) {
+      return ${0:#:x < y};
+    });
+
+snippet stable_sort
+abbr std::stable_sort <algorithm>
+  std::stable_sort(std::begin(${1}), std::end($1))
+
+snippet stable_sort_f
+abbr std::stable_sort <algorithm>
+  std::stable_sort(
+    std::begin(${1}),
+    std::end($1),
+    [](const auto& x, const auto& y) {
+      return ${0:#:x < y};
+    });
+
+snippet shuffle
+abbr std::shuffle <algorithm> <random>
+  std::shuffle(std::begin(${1}), std::end($1), ${2:std\:\:mt19937()})
+
+snippet partial_sum
+abbr std::partial_sum <numeric>
+  std::partial_sum(std::cbegin(${1}), std::cend($1), std::begin(${2}));
+
+snippet min_element
+abbr std::min_element <algorithm>
+  std::min_element(std::cbegin(${1}), std::cend($1))
+
+snippet min_element_f
+abbr std::min_element <algorithm>
+  std::min_element(
+    std::cbegin(${1}),
+    std::cend($1),
+    [](const auto& x, const auto& y) {
+      return ${0:#:x < y};
+    });
+
+snippet max_element
+abbr std::max_element <algorithm>
+  std::max_element(std::cbegin(${1}), std::cend($1))
+
+snippet max_element_f
+abbr std::max_element <algorithm>
+  std::max_element(
+    std::cbegin(${1}),
+    std::cend($1),
+    [](const auto& x, const auto& y) {
+      return ${0:#:x < y};
+    });
+
+snippet minmax_element
+abbr std::minmax_element <algorithm>
+  std::minmax_element(std::cbegin(${1}), std::cend($1))
+
+snippet minmax_element_f
+abbr std::minmax_element <algorithm>
+  std::minmax_element(
+    std::cbegin(${1}),
+    std::cend($1),
+    [](const auto& x, const auto& y) {
+      return ${0:#:x < y};
+    });
+
+snippet iota
+abbr std::iota <numeric>
+  std::iota(std::begin(${1}), std::end($1), ${2:0})
+
+snippet generate
+alias generate_f
+abbr std::generate <algorithm>
+  std::generate(
+    std::begin(${1}),
+    std::end($1),
+    []{
+      return ${0};
+    });
+
+snippet generate_n
+alias generate_n_f
+  std::generate(
+    ${1:#:begin},
+    ${2:#:size},
+    []{
+      return ${0};
+    });
+
+snippet fill_random
+  std::generate(std::begin(${1}), std::end($1), std::${2:mt19937}((std::random_device())()));
+
+snippet fill
+abbr std::fill <algorithm>
+  std::fill(std::begin(${1}), std::end($1), ${2:#:0})
+
+snippet fill_n
+abbr std::fill_n <algorithm>
+  std::fill_n(${1:#:begin}, ${2:#:size}, ${3:#:0})
+
+snippet count
+abbr std::count <algorithm>
+  std::count(std::cbegin(${1}), std::cend($1), ${2:#:value})
+
+snippet count_if
+alias count_f
+abbr std::count_if <algorithm>
+  std::count_if(
+    std::cbegin(${1}),
+    std::cend($1),
+    [](const auto& ${2:e}) {
+      return ${0};
+    });
+
+snippet find
+abbr std::find <algorithm>
+  std::find(std::cbegin(${1}), std::cend($1), ${2:#:value})
+
+snippet find_if
+alias find_f
+abbr std::find_if <algorithm>
+  std::find_if(
+    std::cbegin(${1}),
+    std::cend($1),
+    [](const auto& ${2:e}) {
+      return ${0};
+    });
+
+snippet remove
+abbr std::remove <algorithm>
+  std::remove(std::begin(${1}), std::end($1), ${2:#:value})
+
+snippet remove_if
+alias remove_f
+abbr std::remove_if <algorithm>
+  std::remove_if(
+    std::begin(${1}),
+    std::end($1),
+    [](const auto& ${2:e}) {
+      return ${0};
+    });
+
+snippet remove_erase
+  ${1}.erase(std::remove(std::begin($1), std::end($1), ${2:#:value}), std::end($1));
+
+snippet remove_erase_if
+alias remove_erase_f filter select
+  ${1}.erase(
+    std::remove_if(
+      std::begin($1),
+      std::end($1),
+      [](const auto& ${2:e}) {
+        return ${0};
+      }),
+    std::end($1));
+
+snippet unique
+abbr std::unique <algorithm>
+  std::unique(std::begin(${1}), std::end($1))
+
+snippet unique_f
+abbr std::unique <algorithm>
+  std::unique(
+    std::begin(${1}),
+    std::end($1),
+    [](const auto& ${2:x}, const auto& ${3:y}) {
+      return ${0:#:x == y};
+    });
+
+snippet unique_erase
+  ${1}.erase(std::unique(std::begin($1), std::end($1)), std::end($1));
+
+snippet unique_erase_f
+  ${1}.erase(
+    std::unique(
+      std::begin($1),
+      std::end($1),
+      [](const auto& ${2:x}, const auto& ${3:y}) {
+        return ${0:#:x == y};
+      }),
+    std::end($1));
+
+snippet copy
+abbr std::copy <algorithm>
+  std::copy(std::cbegin(${1}), std::cend($1), std::begin(${2}))
+
+snippet copy_back_inserter
+abbr std::copy_back_inserter <algorithm>
+  std::copy(std::cbegin(${1}), std::cend($1), std::back_inserter(${2}))
+
+snippet copy_backward
+abbr std::copy_backword <algorithm>
+  std::copy_backward(std::cbegin(${1}), std::cend($1), std::end(${2}))
+
+snippet copy_n
+abbr std::copy_n <algorithm>
+  std::copy_n(std::cbegin(${1}), ${2:#:size}, std::begin(${3}))
+
+snippet copy_n_back_inserter
+abbr std::copy_n_back_inserter <algorithm>
+  std::copy_n(std::cbegin(${1}), ${2:#:size}, std::back_inserter(${3}))
+
+snippet copy_if
+alias copy_f
+abbr std::copy_if <algorithm>
+  std::copy_if(
+    std::cbegin(${1}),
+    std::cend($1),
+    std::begin(${2}),
+    [](const auto& ${3:e}) {
+      return ${0};
+    });
+
+snippet copy_if_back_inserter
+alias copy_p_back_inserter
+abbr std::copy_if_back_inserter <algorithm>
+  std::copy_if(
+    std::cbegin(${1}),
+    std::cend($1),
+    std::back_inserter(${2}),
+    [](const auto& ${3:e}) {
+      return ${0};
+    });
+
+snippet replace
+abbr std::replace <algorithm>
+  std::replace(std::begin(${1}), std::end($1), ${2:#:before}, ${3:#:after})
+
+snippet replace_if
+alias replace_f
+abbr std::replace_if <algorithm>
+  std::replace_if(
+    std::begin(${1}),
+    std::end($1),
+    [](const auto& ${3:e}) {
+      return ${0};
+    }, ${2:#:after});
+
+snippet sum
+alias foldl
+  std::accumulate(std::cbegin(${1}), std::cend($1), ${2:decltype($1)::value_type()})
+
+snippet foldr
+  std::accumulate(
+    std::crbegin(${1}),
+    std::crend($1),
+    ${2:decltype($1)::value_type()},
+    [](const auto& ${3:acc}, const auto& ${4:e}) {
+      return $4 + acc;
+    });
+
+snippet accumulate
+alias accumulate_f reduce
+abbr std::acumulate <numeric>
+  std::accumulate(
+    std::cbegin(${1}),
+    std::cend($1),
+    ${2:decltype($1)::value_type()},
+    [](const auto& ${3:acc}, const auto& ${4:e}) {
+      return ${5:acc + $4};
+    });
+
+snippet inner_product
+abbr std::inner_product <numeric>
+  std::inner_product(std::cbegin(${1}), std::cend($1), std::cbegin(${2}), ${3:decltype($1)::value_type()})
+
+snippet transform
+alias transform_f map_set select
+abbr std::transform <algorithm>
+  std::transform(
+    std::cbegin(${1}),
+    std::cend($1),
+    std::begin(${2}),
+    [](const auto& ${3:e}) {
+      return ${0};
+    });
+
+snippet tolower_string
+  std::transform(std::cbegin(${1}), std::cend($1), std::begin($1), static_cast<int (*)(int)>(std::tolower));
+
+snippet toupper_string
+  std::transform(std::cbegin(${1}), std::cend($1), std::begin($1), static_cast<int (*)(int)>(std::toupper));
+
+snippet next_permutation
+  do {
+    ${0}
+  } while (std::next_permutation(std::begin(${1}), std::end($1)));
+
+snippet time_measurement
+  auto ${1:start} = std::chrono::system_clock::now();
+  ${0};
+  auto ${2:elapsed} = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - $1).count();
+
+snippet duration_cast
+abbr std::chrono::duration_cast<T>() <chrono>
+  std::chrono::duration_cast<std::chrono::${1:milliseconds}>(${2})
+
+snippet lock_guard
+  {
+    std::lock_guard<decltype($2)> ${1:lock}(${2:#:mutex});
+    ${0}
+  }
+
+snippet lock_guard_adopt
+  {
+    std::lock_guard<decltype($2)> ${1:lock}(${2:#:mutex}, std::adopt_lock);
+    ${0}
+  }
+
+snippet join
+  std::ostringstream ${1:oss};
+  if (!${2}.empty()) {
+    std::copy(std::cbegin($2), std::prev(std::cend($2)), std::ostream_iterator<const decltype($2)::value_type&>($1, ${3:","}));
+    $1 << *std::crbegin($2);
+  }
+  ${0}
+
+snippet join_to_string
+  ${1}.empty() ? "" : std::accumulate(
+    std::next(std::cbegin($1)),
+    std::cend($1),
+    std::to_string($1[0]),
+    [](const std::string& ${2:acc}, const auto& ${3:e}) {
+      return $2 + ${4:","} + std::to_string($3);
+    })${0}
+
+snippet split
+  std::vector<std::string> ${1:tokens};
+  std::string::size_type ${2:spos} = 0, ${3:epos}, ${4:delimlen} = sizeof(${5:","}) - 1;
+  while (($3 = ${6:#:string}.find_first_of(",", $2)) != std::string::npos) {
+    $1.emplace_back($6.substr($2, $3 - $2));
+    $2 = $3 + $4;
+  }
+  $1.emplace_back($6.substr($2));
+  ${0}
+
+snippet split_by_char
+  std::vector<std::string> ${1:tokens};
+  std::istringstream ${2:iss}(${3:#:string});
+  for (std::string ${4:token}; std::getline($2, $4, ${5:','});) {
+    $1.push_back($4);
+  }
+  ${0}
+
+snippet regex
+  std::regex ${1:#:name}("${2:#:pattern}");
+
+snippet regex_match_loop
+  for (std::sregex_iterator ${1:itr} = std::sregex_iterator(std::cbegin(${2:#:text}), std::cend($2), ${3:#:regex}), ${4:end}; $1 != $4; ++$1) {
+    ${0}
+  }
+
+snippet regex_split_loop
+  for (std::sregex_iterator ${1:itr} = std::sregex_iterator(std::cbegin(${2:#:text}), std::cend($2), ${3:#:regex}, -1), ${4:end}; $1 != $4; ++$1) {
+    ${0}
+  }
+
+snippet regex_match_container
+  std::${1:vector}<std::string> ${2:#:name}(std::regex_token_iterator(std::cbegin(${3:#:text}), std::cend($3), ${4:#:regex}), std::regex_token_iterator());
+
+snippet regex_split_container
+  std::${1:vector}<std::string> ${2:#:name}(std::regex_token_iterator(std::cbegin(${3:#:text}), std::cend($3), ${4:#:regex}, -1), std::regex_token_iterator());
+
+snippet regex_split_back_inserter
+  std::copy(
+    std::sregex_token_iterator(std::cbegin(${1:#:text}), std::cend($1), ${2:#:regex}),
+    std::sregex_token_iterator(),
+    std::back_inserter(${3}));
+
+snippet regex_match_back_inserter
+  std::copy(
+    std::sregex_token_iterator(std::cbegin(${1:#:text}), std::cend($1), ${2:#:regex}, -1),
+    std::sregex_token_iterator(),
+    std::back_inserter(${3}));
+
+snippet regex_replace
+  std::regex_replace(${1:#:text}, std::regex("${2:#:pattern}"), "${3:#:after}");
+
+
+snippet include
+alias inc
+  #include <${0}>
+
+snippet include_math
+  #ifdef _MSC_VER
+  #  define _USE_MATH_DEFINES
+  #endif
+  #include <cmath>
+
+snippet include_guard
+alias inc_guard
+  #ifndef ${1:#:name}
+  #define $1
+
+  ${0}
+
+  #endif  // $1
+
+snippet extern_c
+  #ifdef __cplusplus
+  extern "C" {
+  #endif  // __cplusplus
+
+  ${0}
+
+  #ifdef __cplusplus
+  }
+  #endif  // __cplusplus
+
+snippet if_cpp11
+  #if __cplusplus >= 201103L
+  ${0}
+  #endif  // __cplusplus >= 201103L
+
+snippet if_cpp14
+  #if __cplusplus >= 201402L
+  ${0}
+  #endif  // __cplusplus >= 201402L
+
+snippet if_gcc
+  #ifdef __GNUC__
+  ${0}
+  #endif  // __GNUC__
+
+snippet if_msvc
+  #ifdef _MSC_VER
+  ${0}
+  #endif  // _MSC_VER
+
+snippet if_x64
+  #if defined(__x86_64__) || defined(_WIN64) || defined(__MINGW64__)
+  ${0}
+  #endif  // defined(__x86_64__) || defined(_WIN64) || defined(__MINGW64__)
+
